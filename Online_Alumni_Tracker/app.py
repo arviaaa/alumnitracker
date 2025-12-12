@@ -213,7 +213,9 @@ def delete_alumni(alumni_id):
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    # Fetch programs for the dropdown menu
     programs = get_programs()
+    
     if request.method == "POST":
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
@@ -224,6 +226,7 @@ def register():
 
         conn = get_db_connection()
         try:
+            # Insert the new alumni into the database
             conn.execute("""
                 INSERT INTO alumni (first_name, last_name, email, graduation_year, program_id, password) 
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -232,6 +235,7 @@ def register():
             flash("Registration successful! You can now login.", "success")
             return redirect(url_for("alumni_login"))
         except sqlite3.IntegrityError:
+            # This catches duplicates if the email is already taken
             flash("Email already exists!", "danger")
         finally:
             conn.close()
@@ -415,7 +419,7 @@ def alumni_profile():
 def alumni_logout():
     session.clear()
     flash("Logged out successfully.", "info")
-    return redirect(url_for("alumni_login"))
+    return redirect(url_for("index"))  # Redirects to Home instead of Login
 
 
 # -----------------------------

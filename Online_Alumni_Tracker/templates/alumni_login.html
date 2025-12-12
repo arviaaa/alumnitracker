@@ -3,6 +3,7 @@
 <body class="login-page">
 <div class="login-container">
     <h2>Alumni Login</h2>
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -10,19 +11,19 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+
     <form method="POST">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
+
+    <div style="margin-top: 15px; text-align: center;">
+        <p>Don't have an account? <br>
+           <a href="{{ url_for('register') }}" style="color: #1f3a93; font-weight: bold; text-decoration: underline;">Register here</a>
+        </p>
+    </div>
+
 </div>
+</body>
 {% endblock %}
-
-
-
-
-
-
-
-
-

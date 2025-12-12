@@ -1,46 +1,50 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Edit' if career else 'Add' }} Career{% endblock %}
+{% block title %}Careers{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-lg border-0 rounded-3">
-      <div class="card-header bg-warning text-white text-center">
-        <h3>{{ 'Edit' if career else 'Add' }} Career</h3>
-      </div>
-      <div class="card-body">
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label">Alumni</label>
-            <select name="alumni_id" class="form-select" required>
-              <option value="">-- Select Alumni --</option>
-              {% for alumnus in alumni %}
-              <option value="{{ alumnus.alumni_id }}" {% if career and career.alumni_id == alumnus.alumni_id %}selected{% endif %}>
-                {{ alumnus.first_name }} {{ alumnus.last_name }}
-              </option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Company Name</label>
-            <input type="text" name="company_name" class="form-control" value="{{ career.company_name if career else '' }}" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Position</label>
-            <input type="text" name="position" class="form-control" value="{{ career.position if career else '' }}" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Start Date</label>
-            <input type="date" name="start_date" class="form-control" value="{{ career.start_date if career else '' }}" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">End Date</label>
-            <input type="date" name="end_date" class="form-control" value="{{ career.end_date if career else '' }}">
-          </div>
-          <button type="submit" class="btn btn-warning w-100">{{ 'Update' if career else 'Add' }}</button>
-        </form>
-      </div>
-    </div>
-  </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Alumni Careers</h2>
+    
+    {% if session.get('admin_logged_in') %}
+      <a href="{{ url_for('add_career') }}" class="btn btn-primary">Add Career</a>
+    {% endif %}
+    
 </div>
+
+<table class="table table-striped table-hover shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>Alumni</th>
+      <th>Company</th>
+      <th>Position</th>
+      <th>Start</th>
+      <th>End</th>
+      
+      {% if session.get('admin_logged_in') %}
+        <th>Actions</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for career in careers %}
+    <tr>
+      <td>{{ career.first_name }} {{ career.last_name }}</td>
+      <td>{{ career.company_name }}</td>
+      <td>{{ career.position }}</td>
+      <td>{{ career.start_date }}</td>
+      <td>{{ career.end_date or '-' }}</td>
+      
+      {% if session.get('admin_logged_in') %}
+      <td>
+          <a href="{{ url_for('edit_career', career_id=career.career_id) }}" class="btn btn-sm btn-warning">Edit</a>
+          <form action="{{ url_for('delete_career', career_id=career.career_id) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this career?')">Delete</button>
+          </form>
+      </td>
+      {% endif %}
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
