@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="alumni_tracker.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1799"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="programs" custom_title="0" dock_id="1" table="4,8:mainprograms"/><dock_state state="000000ff00000000fd00000001000000020000039100000258fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000003910000011e00ffffff000003910000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="admin" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="60"/><column index="2" value="65"/><column index="3" value="71"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="alumni" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="63"/><column index="2" value="70"/><column index="3" value="79"/><column index="4" value="199"/><column index="5" value="95"/><column index="6" value="103"/><column index="7" value="76"/><column index="8" value="62"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="announcements" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="110"/><column index="2" value="127"/><column index="3" value="300"/><column index="4" value="87"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="careers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="62"/><column index="2" value="65"/><column index="3" value="99"/><column index="4" value="175"/><column index="5" value="87"/><column index="6" value="62"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="events" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="58"/><column index="2" value="183"/><column index="3" value="300"/><column index="4" value="87"/><column index="5" value="76"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="programs" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="74"/><column index="2" value="96"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">-- -------------------------
+-- Drop existing tables (optional, if you want to start fresh)
+-- -------------------------
+DROP TABLE IF EXISTS careers;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS alumni;
+DROP TABLE IF EXISTS programs;
+DROP TABLE IF EXISTS admin;
+
+-- -------------------------
+-- Table for Programs
+-- -------------------------
+CREATE TABLE IF NOT EXISTS programs (
+    program_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    program_name TEXT NOT NULL
+);
+
+-- Sample Programs
+INSERT INTO programs (program_name) VALUES
+('BSIT'), 
+('BSCS'), 
+('BSCpE');
+
+-- -------------------------
+-- Table for Alumni
+-- -------------------------
+CREATE TABLE IF NOT EXISTS alumni (
+    alumni_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone TEXT,
+    graduation_year INTEGER,
+    program_id INTEGER,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id)
+);
+
+-- Sample Alumni (5 examples)
+INSERT INTO alumni (first_name, last_name, email, phone, graduation_year, program_id) VALUES
+('Remalyn', 'Abad', 'remalyn.abad@email.com', '09171234567', 2024, 1),
+('Stacy', 'Dela Cruz', 'stacy.delacruz@email.com', '09181234567', 2023, 2),
+('Orange', 'Santos', 'orange.santos@email.com', '09201234567', 2025, 1),
+('Kieran', 'Reyes', 'kieran.reyes@email.com', '09211234567', 2022, 3),
+('Jamila', 'Lopez', 'jamila.lopez@email.com', '09301234567', 2024, 2);
+
+-- -------------------------
+-- Table for Announcements / Events
+-- -------------------------
+CREATE TABLE IF NOT EXISTS events (
+    event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_title TEXT NOT NULL,
+    event_description TEXT,
+    event_date TEXT NOT NULL,
+    program_id INTEGER,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id)
+);
+
+-- Sample Announcements
+INSERT INTO events (event_title, event_description, event_date, program_id) VALUES
+('Alumni Homecoming 2025', 'Join us for food, music, and fellowship with fellow graduates.', '2025-03-21', 1),
+('Job Fair 2025', 'Meet top IT industry employers and submit your resumes.', '2025-04-10', 2),
+('TechTalk Seminar', 'A seminar about new emerging technologies in the industry.', '2025-02-18', 3);
+
+-- -------------------------
+-- Table for Careers
+-- -------------------------
+CREATE TABLE IF NOT EXISTS careers (
+    career_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    alumni_id INTEGER,
+    company_name TEXT NOT NULL,
+    position TEXT NOT NULL,
+    start_date TEXT NOT NULL,
+    end_date TEXT,
+    FOREIGN KEY (alumni_id) REFERENCES alumni(alumni_id)
+);
+
+-- Sample Careers
+INSERT INTO careers (alumni_id, company_name, position, start_date, end_date) VALUES
+(1, 'TechCorp', 'Software Engineer', '2025-06-01', NULL),
+(2, 'CyberSoft', 'Network Administrator', '2024-01-15', NULL),
+(3, 'Innovatech', 'Data Analyst', '2025-05-20', NULL);
+
+-- -------------------------
+-- Table for Admin
+-- -------------------------
+CREATE TABLE IF NOT EXISTS admin (
+    admin_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+
+
+ALTER TABLE alumni ADD COLUMN password TEXT;
+
+UPDATE alumni SET password = '1234';
+
+-- Sample Admin
+INSERT INTO admin (username, password) VALUES
+('admin', 'admin123');  -- In production, hash passwords!
+
+-- Set default passwords for sample alumni (for testing)
+UPDATE alumni SET password = '1234' WHERE alumni_id = 1;
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" value="{{ admin.username or '' }}" required>
+
+    <label>Password{% if admin %} (leave blank to keep current){% endif %}</label>
+    <input type="password" name="password" {% if not admin %}required{% endif %}>
+
+    <button type="submit">{{ submit_button }}</button>
+</form>
+{% endblock %}

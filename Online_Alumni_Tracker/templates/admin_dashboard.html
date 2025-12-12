@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h2>Welcome, {{ session.get('admin_username') }}</h2>
+    <p>Use the navigation above to manage Alumni, Announcements, and Careers.</p>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Alumni</h5>
+        <p class="card-text">View, add, edit, or delete alumni records.</p>
+        <a href="{{ url_for('alumni') }}" class="btn btn-primary">Manage Alumni</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Announcements</h5>
+        <p class="card-text">Manage events and announcements for alumni.</p>
+        <a href="{{ url_for('announcements') }}" class="btn btn-primary">Manage Announcements</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Careers</h5>
+        <p class="card-text">Add and track alumni career progress.</p>
+        <a href="{{ url_for('careers') }}" class="btn btn-primary">Manage Careers</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

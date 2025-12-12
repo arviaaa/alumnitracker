@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>My Profile</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" name="first_name" value="{{ alumni['first_name'] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="last_name" value="{{ alumni['last_name'] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ alumni['email'] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" value="{{ alumni['phone'] }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Graduation Year</label>
+            <input type="number" class="form-control" name="graduation_year" value="{{ alumni['graduation_year'] }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Program</label>
+            <select class="form-select" name="program_id">
+                <option value="">-- Select Program --</option>
+                {% for program in programs %}
+                    <option value="{{ program['program_id'] }}" {% if program['program_id'] == alumni['program_id'] %}selected{% endif %}>
+                        {{ program['program_name'] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

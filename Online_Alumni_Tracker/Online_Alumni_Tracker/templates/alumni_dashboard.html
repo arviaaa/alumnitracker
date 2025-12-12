@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Alumni Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h2>Welcome, {{ session.get('alumni_name') }}</h2>
+    <p>View your profile, announcements, and career updates.</p>
+</div>
+
+<div class="row g-3 justify-content-center">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Profile</h5>
+        <p class="card-text">View and update your personal information.</p>
+        <a href="{{ url_for('alumni_profile') }}" class="btn btn-success">View Profile</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Announcements</h5>
+        <p class="card-text">Check the latest announcements.</p>
+        <a href="{{ url_for('announcements') }}" class="btn btn-success">View Announcements</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Careers</h5>
+        <p class="card-text">See your career updates and history.</p>
+        <a href="{{ url_for('careers') }}" class="btn btn-success">View Careers</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} -->
+
+
+
+
+<!-- <h2>My Careers</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for career in careers %}
+        <tr>
+            <td>{{ career['company_name'] }}</td>
+            <td>{{ career['position'] }}</td>
+            <td>{{ career['start_date'] }}</td>
+            <td>{{ career['end_date'] if career['end_date'] else 'Present' }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" style="text-align:center;">No career records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- <h2>My Careers</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for career in careers %}
+        <tr>
+            <td>{{ career['company_name'] }}</td>
+            <td>{{ career['position'] }}</td>
+            <td>{{ career['start_date'] }}</td>
+            <td>{{ career['end_date'] if career['end_date'] else 'Present' }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" style="text-align:center;">No career records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table> -->
+
+
+<!-- {% extends "base.html" %}
+{% block title %}Alumni Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h2>Welcome, {{ session.get('alumni_name') }}</h2>
+    <p>View your profile, announcements, and career updates.</p>
+</div>
+
+<div class="row g-3 justify-content-center">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Profile</h5>
+                <p class="card-text">View and update your personal information.</p>
+                <a href="{{ url_for('alumni_profile') }}" class="btn btn-success">View Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Announcements</h5>
+                <p class="card-text">Check the latest announcements.</p>
+                <a href="{{ url_for('announcements') }}" class="btn btn-success">View Announcements</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Careers</h5>
+                <p class="card-text">See your career updates and history.</p>
+                <a href="{{ url_for('careers') }}" class="btn btn-success">View Careers</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} -->

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <h1>Announcements</h1>
+
+    {% if is_admin %}
+    <!-- Admin view: table with actions -->
+    <div style="text-align:right; margin-bottom:15px;">
+        <a href="{{ url_for('add_announcement') }}" class="btn-primary">+ Add Announcement</a>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Program</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for announcement in announcements %}
+                <tr>
+                    <td data-label="Title">{{ announcement['event_title'] }}</td>
+                    <td data-label="Description">{{ announcement['event_description'] }}</td>
+                    <td data-label="Date">{{ announcement['event_date'] }}</td>
+                    <td data-label="Program">{{ announcement['program_name'] or 'All' }}</td>
+                    <td data-label="Actions">
+                        <a href="{{ url_for('edit_announcement', event_id=announcement['event_id']) }}" class="btn-edit">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_announcement', event_id=announcement['event_id']) }}" style="display:inline;">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <!-- Alumni view: card layout -->
+    <div class="cards-container">
+        {% for announcement in announcements %}
+        <div class="announcement-card">
+            <h3>{{ announcement['event_title'] }}</h3>
+            <p>{{ announcement['event_description'] }}</p>
+            <span class="date">{{ announcement['event_date'] }}</span>
+            <span class="program">{{ announcement['program_name'] or 'All Programs' }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

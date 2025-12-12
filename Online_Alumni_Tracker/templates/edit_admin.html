@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Admin</title>
+</head>
+<body>
+    <h1>Edit Admin</h1>
+    <form method="post">
+        <label>Username:</label>
+        <input type="text" name="username" value="{{ admin.username }}" required><br><br>
+        <label>Password:</label>
+        <input type="password" name="password" value="{{ admin.password }}" required><br><br>
+        <button type="submit">Update Admin</button>
+    </form>
+    <a href="{{ url_for('admin') }}">Back to Admin List</a>
+</body>
+</html>
+
+

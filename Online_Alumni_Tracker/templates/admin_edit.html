@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Edit Admin{% endblock %}
+
+{% block content %}
+<h1>Edit Admin Account</h1>
+
+<form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" value="{{ admin.username }}" required>
+
+    <label>New Password (optional)</label>
+    <input type="password" name="password">
+
+    <button type="submit">Save Changes</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Admin Accounts{% endblock %}
+
+{% block content %}
+<h1>Admin Accounts</h1>
+<a href="{{ url_for('admin_add') }}"><button>Add New Admin</button></a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.created_at }}</td>
+            <td>
+                <a href="{{ url_for('admin_edit', admin_id=admin.admin_id) }}"><button>Edit</button></a>
+                <form action="{{ url_for('admin_delete', admin_id=admin.admin_id) }}" method="POST" style="display:inline;">
+                    <button onclick="return confirm('Delete this admin?')" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

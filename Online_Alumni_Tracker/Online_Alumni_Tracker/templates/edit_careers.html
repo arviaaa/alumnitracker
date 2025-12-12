@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Edit Career{% endblock %}
+
+{% block content %}
+<h1>Edit Career</h1>
+<form method="POST">
+    <label>Alumni</label>
+    <select name="alumni_id" required>
+        {% for a in alumni %}
+            <option value="{{ a.alumni_id }}" {% if a.alumni_id == career.alumni_id %}selected{% endif %}>{{ a.first_name }} {{ a.last_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Company Name</label>
+    <input type="text" name="company_name" value="{{ career.company_name }}" required>
+
+    <label>Position</label>
+    <input type="text" name="position" value="{{ career.position }}" required>
+
+    <label>Start Date</label>
+    <input type="date" name="start_date" value="{{ career.start_date }}" required>
+
+    <label>End Date</label>
+    <input type="date" name="end_date" value="{{ career.end_date }}">
+
+    <button type="submit">Update Career</button>
+</form>
+{% endblock %} -->
+

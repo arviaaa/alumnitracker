@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Edit Announcement{% endblock %}
+
+{% block content %}
+<h1>Edit Announcement</h1>
+<form method="POST">
+    <label>Title</label>
+    <input type="text" name="title" value="{{ announcement.event_title }}" required>
+
+    <label>Description</label>
+    <textarea name="description" rows="4" required>{{ announcement.event_description }}</textarea>
+
+    <label>Date</label>
+    <input type="date" name="announcement_date" value="{{ announcement.event_date }}" required>
+
+    <label>Program</label>
+    <select name="program_id">
+        <option value="">All Programs</option>
+        {% for program in programs %}
+        <option value="{{ program.program_id }}" {% if announcement.program_id == program.program_id %}selected{% endif %}>{{ program.program_name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Update Announcement</button>
+</form>
+{% endblock %} -->
+
+
+<!-- {% extends "base.html" %}
+{% block title %}Edit Announcement{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Announcement</h2>
+    <form method="POST">
+        <label>Title</label>
+        <input type="text" name="title" value="{{ announcement.event_title }}" required>
+
+        <label>Description</label>
+        <textarea name="description" rows="4" required>{{ announcement.event_description }}</textarea>
+
+        <label>Date</label>
+        <input type="date" name="announcement_date" value="{{ announcement.event_date }}" required>
+
+        <label>Program</label>
+        <select name="program_id">
+            <option value="">All Programs</option>
+            {% for program in programs %}
+            <option value="{{ program.program_id }}" {% if announcement.program_id == program.program_id %}selected{% endif %}>{{ program.program_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-success mt-3">Update Announcement</button>
+        <a href="{{ url_for('announcements') }}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if alumni else 'Add' }} Alumni{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-lg border-0 rounded-3">
+      <div class="card-header bg-primary text-white text-center">
+        <h3>{{ 'Edit' if alumni else 'Add' }} Alumni</h3>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{ alumni.first_name if alumni else '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{ alumni.last_name if alumni else '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ alumni.email if alumni else '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control" value="{{ alumni.phone if alumni else '' }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Graduation Year</label>
+            <input type="number" name="graduation_year" class="form-control" value="{{ alumni.graduation_year if alumni else '' }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Program</label>
+            <select name="program_id" class="form-select">
+              <option value="">-- Select Program --</option>
+              {% for program in programs %}
+              <option value="{{ program.program_id }}" {% if alumni and alumni.program_id == program.program_id %}selected{% endif %}>
+                {{ program.program_name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">{{ 'Update' if alumni else 'Add' }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+

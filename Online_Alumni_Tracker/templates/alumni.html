@@ -1,0 +1,48 @@
+
+
+
+{% extends "base.html" %}
+{% block title %}Alumni{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Alumni List</h2>
+    {% if session.get('admin_logged_in') %}
+      <a href="{{ url_for('add_alumni') }}" class="btn btn-primary">Add Alumni</a>
+    {% endif %}
+</div>
+
+<table class="table table-striped table-hover shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Graduation Year</th>
+      <th>Program</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alum in alumni %}
+    <tr>
+      <td>{{ alum.first_name }} {{ alum.last_name }}</td>
+      <td>{{ alum.email }}</td>
+      <td>{{ alum.phone or '-' }}</td>
+      <td>{{ alum.graduation_year or '-' }}</td>
+      <td>{{ alum.program_name or '-' }}</td>
+      <td>
+        {% if session.get('admin_logged_in') %}
+          <a href="{{ url_for('edit_alumni', alumni_id=alum.alumni_id) }}" class="btn btn-sm btn-warning">Edit</a>
+          <form action="{{ url_for('delete_alumni', alumni_id=alum.alumni_id) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this alumni?')">Delete</button>
+          </form>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

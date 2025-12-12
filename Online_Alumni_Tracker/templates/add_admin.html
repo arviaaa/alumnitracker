@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Add Admin</h1>
+    <form method="post">
+        <label>Username:</label>
+        <input type="text" name="username" required>
+        <label>Password:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Add Admin</button>
+    </form>
+    <div style="text-align:center; margin-top:10px;">
+        <a href="{{ url_for('admin') }}">Back to Admin List</a>
+    </div>
+</body>
+</html>
