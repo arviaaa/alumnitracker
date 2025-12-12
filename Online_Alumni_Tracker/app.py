@@ -329,26 +329,48 @@ def delete_announcement(event_id):
 # -----------------------------
 # CAREERS ROUTES
 # -----------------------------
-@app.route("/careers")
-def careers():
-    careers_list = get_careers()
-    return render_template("careers.html", careers=careers_list)
-
 @app.route("/careers/add", methods=["GET","POST"])
 def add_career():
+    # Security check
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
+    
     alumni_list = get_alumni()
+    
     if request.method == "POST":
         conn = get_db_connection()
-        conn.execute("""INSERT INTO careers (alumni_id, company_name, position, start_date, end_date)
-                        VALUES (?, ?, ?, ?, ?)""",
-                     (request.form["alumni_id"], request.form["company_name"], request.form["position"],
-                      request.form["start_date"], request.form["end_date"] or None))
-        conn.commit()
-        conn.close()
-        flash("Career added successfully!", "success")
+        try:
+            # 1. Get the data safely
+            alumni_id = request.form.get("alumni_id")
+            company = request.form.get("company_name")
+            position = request.form.get("position")
+            start_date = request.form.get("start_date")
+            end_date = request.form.get("end_date")
+
+            # 2. Handle empty End Date (convert empty string to None/NULL)
+            if not end_date or end_date.strip() == "":
+                end_date = None
+            
+            # 3. Insert into Database
+            # We convert alumni_id to int to ensure it matches the database type
+            conn.execute("""
+                INSERT INTO careers (alumni_id, company_name, position, start_date, end_date)
+                VALUES (?, ?, ?, ?, ?)
+            """, (int(alumni_id), company, position, start_date, end_date))
+            
+            conn.commit()
+            flash("Career added successfully!", "success")
+            print("DEBUG: Career added to database.") # Check your VS Code terminal for this message
+
+        except Exception as e:
+            conn.rollback()
+            print(f"DEBUG ERROR: {e}") # This will print the exact error to your terminal
+            flash(f"Error adding career: {e}", "danger")
+        finally:
+            conn.close()
+            
         return redirect(url_for("careers"))
+        
     return render_template("add_careers.html", alumni=alumni_list)
 
 @app.route("/careers/edit/<int:career_id>", methods=["GET","POST"])
