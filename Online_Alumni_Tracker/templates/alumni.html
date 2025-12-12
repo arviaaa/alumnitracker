@@ -17,31 +17,18 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
-      <th>Phone</th>
       <th>Graduation Year</th>
       <th>Program</th>
-      <th>Actions</th>
-    </tr>
+      </tr>
   </thead>
-  <tbody>
+<tbody>
     {% for alum in alumni %}
     <tr>
       <td>{{ alum.first_name }} {{ alum.last_name }}</td>
       <td>{{ alum.email }}</td>
-      <td>{{ alum.phone or '-' }}</td>
       <td>{{ alum.graduation_year or '-' }}</td>
       <td>{{ alum.program_name or '-' }}</td>
-      <td>
-        {% if session.get('admin_logged_in') %}
-          <a href="{{ url_for('edit_alumni', alumni_id=alum.alumni_id) }}" class="btn btn-sm btn-warning">Edit</a>
-          <form action="{{ url_for('delete_alumni', alumni_id=alum.alumni_id) }}" method="post" class="d-inline">
-            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this alumni?')">Delete</button>
-          </form>
-        {% else %}
-          -
-        {% endif %}
-      </td>
-    </tr>
+      </tr>
     {% endfor %}
   </tbody>
 </table>

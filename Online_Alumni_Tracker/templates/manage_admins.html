@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Manage Admins{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Manage Admin Access</h2>
+    
+    <div class="card mb-4 p-3 shadow-sm">
+        <h5>Add New Admin</h5>
+        <form method="POST" class="d-flex gap-2">
+            <input type="hidden" name="add_admin" value="1">
+            <input type="text" name="username" placeholder="Username" class="form-control" required>
+            <input type="password" name="password" placeholder="Password" class="form-control" required>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.admin_id }}</td>
+                <td>{{ admin.username }}</td>
+                <td>
+                    <form method="POST" onsubmit="return confirm('Are you sure you want to remove this admin?');">
+                        <input type="hidden" name="delete_admin" value="1">
+                        <input type="hidden" name="admin_id" value="{{ admin.admin_id }}">
+                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

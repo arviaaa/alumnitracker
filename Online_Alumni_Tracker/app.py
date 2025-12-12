@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 
@@ -96,41 +95,39 @@ def admin_dashboard():
         return redirect(url_for("admin_login"))
     return render_template("admin_dashboard.html")
 
-# # -----------------------------
-# # ALUMNI ROUTES
-# # -----------------------------
-# @app.route("/alumni")
-# def alumni():
-#     alumni_list = get_alumni()
-#     return render_template("alumni.html", alumni=alumni_list)
+@app.route("/admin/manage", methods=["GET", "POST"])
+def manage_admins():
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin_login"))
+    
+    conn = get_db_connection()
+    
+    # Handle Adding New Admin
+    if request.method == "POST" and "add_admin" in request.form:
+        username = request.form["username"]
+        password = request.form["password"]
+        try:
+            conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", (username, password))
+            conn.commit()
+            flash("New admin added successfully!", "success")
+        except:
+            flash("Username already exists.", "danger")
 
-# @app.route("/alumni/login", methods=["GET", "POST"])
-# def alumni_login():
-#     if request.method == "POST":
-#         email = request.form["email"]
-#         password = request.form["password"]
+    # Handle Deleting Admin
+    if request.method == "POST" and "delete_admin" in request.form:
+        admin_id = request.form["admin_id"]
+        # Prevent deleting yourself
+        current_admin = conn.execute("SELECT * FROM admin WHERE username = ?", (session.get("admin_username"),)).fetchone()
+        if current_admin and str(current_admin['admin_id']) == admin_id:
+             flash("You cannot delete your own account while logged in.", "warning")
+        else:
+            conn.execute("DELETE FROM admin WHERE admin_id = ?", (admin_id,))
+            conn.commit()
+            flash("Admin removed.", "info")
 
-#         conn = get_db_connection()
-#         alumni = conn.execute("SELECT * FROM alumni WHERE email = ?", (email,)).fetchone()
-#         conn.close()
-
-#         if alumni and password == alumni["password"]: 
-#             session["alumni_logged_in"] = True
-#             session["alumni_id"] = alumni["alumni_id"]
-#             session["alumni_name"] = f"{alumni['first_name']} {alumni['last_name']}"
-#             flash("Logged in successfully!", "success")
-#             return redirect(url_for("alumni_dashboard"))
-#         else:
-#             flash("Invalid email or password!", "danger")
-
-#     return render_template("alumni_login.html")
-
-# @app.route("/alumni/dashboard")
-# def alumni_dashboard():
-#     if not session.get("alumni_logged_in"):
-#         flash("Please log in first.", "warning")
-#         return redirect(url_for("alumni_login"))
-#     return render_template("alumni_dashboard.html")
+    admins = conn.execute("SELECT * FROM admin").fetchall()
+    conn.close()
+    return render_template("manage_admins.html", admins=admins)
 
 # -----------------------------
 # ALUMNI ROUTES
@@ -152,14 +149,15 @@ def add_alumni():
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
         email = request.form["email"]
-        phone = request.form.get("phone")
+        # Phone removed here
         graduation_year = request.form.get("graduation_year")
         program_id = request.form.get("program_id") or None
 
         conn = get_db_connection()
+        # Phone removed from INSERT statement
         conn.execute(
-            "INSERT INTO alumni (first_name, last_name, email, phone, graduation_year, program_id) VALUES (?, ?, ?, ?, ?, ?)",
-            (first_name, last_name, email, phone, graduation_year, program_id)
+            "INSERT INTO alumni (first_name, last_name, email, graduation_year, program_id) VALUES (?, ?, ?, ?, ?)",
+            (first_name, last_name, email, graduation_year, program_id)
         )
         conn.commit()
         conn.close()
@@ -179,12 +177,13 @@ def edit_alumni(alumni_id):
     programs = get_programs()
 
     if request.method == "POST":
+        # Phone removed from UPDATE statement
         conn.execute(
             """UPDATE alumni 
-               SET first_name=?, last_name=?, email=?, phone=?, graduation_year=?, program_id=?
+               SET first_name=?, last_name=?, email=?, graduation_year=?, program_id=?
                WHERE alumni_id=?""",
             (request.form["first_name"], request.form["last_name"], request.form["email"],
-             request.form.get("phone"), request.form.get("graduation_year"),
+             request.form.get("graduation_year"),
              request.form.get("program_id") or None, alumni_id)
         )
         conn.commit()
@@ -207,6 +206,37 @@ def delete_alumni(alumni_id):
     conn.close()
     flash("Alumni deleted successfully!", "info")
     return redirect(url_for("alumni"))
+
+# -----------------------------
+# ALUMNI AUTHENTICATION ROUTES/REGISTER
+# -----------------------------
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    programs = get_programs()
+    if request.method == "POST":
+        first_name = request.form["first_name"]
+        last_name = request.form["last_name"]
+        email = request.form["email"]
+        graduation_year = request.form["graduation_year"]
+        program_id = request.form["program_id"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        try:
+            conn.execute("""
+                INSERT INTO alumni (first_name, last_name, email, graduation_year, program_id, password) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (first_name, last_name, email, graduation_year, program_id, password))
+            conn.commit()
+            flash("Registration successful! You can now login.", "success")
+            return redirect(url_for("alumni_login"))
+        except sqlite3.IntegrityError:
+            flash("Email already exists!", "danger")
+        finally:
+            conn.close()
+
+    return render_template("register.html", programs=programs)
 
 @app.route("/alumni/login", methods=["GET", "POST"])
 def alumni_login():
@@ -368,10 +398,11 @@ def alumni_profile():
 
     if request.method == "POST":
         conn = get_db_connection()
-        conn.execute("""UPDATE alumni SET first_name=?, last_name=?, email=?, phone=?, graduation_year=?, program_id=?
+        # Phone removed from UPDATE statement
+        conn.execute("""UPDATE alumni SET first_name=?, last_name=?, email=?, graduation_year=?, program_id=?
                         WHERE alumni_id=?""",
                      (request.form["first_name"], request.form["last_name"], request.form["email"],
-                      request.form["phone"], request.form["graduation_year"], request.form["program_id"] or None, alumni_id))
+                      request.form["graduation_year"], request.form["program_id"] or None, alumni_id))
         conn.commit()
         conn.close()
         flash("Profile updated successfully!", "success")
@@ -392,8 +423,3 @@ def alumni_logout():
 # -----------------------------
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-
