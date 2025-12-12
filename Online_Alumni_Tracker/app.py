@@ -165,7 +165,7 @@ def add_alumni():
         return redirect(url_for("alumni"))
 
     return render_template("add_alumni.html", programs=programs, alumni=None)
-
+'''
 @app.route("/alumni/edit/<int:alumni_id>", methods=["GET", "POST"])
 def edit_alumni(alumni_id):
     if not session.get("admin_logged_in"):
@@ -206,7 +206,7 @@ def delete_alumni(alumni_id):
     conn.close()
     flash("Alumni deleted successfully!", "info")
     return redirect(url_for("alumni"))
-
+'''
 # -----------------------------
 # ALUMNI AUTHENTICATION ROUTES/REGISTER
 # -----------------------------
